@@ -66,13 +66,11 @@ function drawImageWithCifra(imageObj, id) {
               break;
         }
 
-        // i+3 is alpha (the fourth element)
         data[i] = newRgb.red;
         data[i + 1] = newRgb.green;
         data[i + 2] = newRgb.blue;
     }
 
-    // overwrite original image
     context.putImageData(imageData, 0, 0);
 }
 
@@ -80,7 +78,6 @@ function descriptImage(id = "xor"){
     var canvas = document.getElementById(id);
     var context = canvas.getContext("2d");
     var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-    console.log(imageData)
     var data = imageData.data;
     for (var i = 0; i < data.length; i += 4) {
         var red = data[i]; 
@@ -100,15 +97,11 @@ function descriptImage(id = "xor"){
               break;
         }
 
-        // i+3 is alpha (the fourth element)
         data[i] = newRgb.red;
         data[i + 1] = newRgb.green;
         data[i + 2] = newRgb.blue;
     }
-    console.log(data)
-    console.log(imageData.data)
 
-    // overwrite ori,ginal image
     context.putImageData(imageData, 0, 0);
 }
 
@@ -119,13 +112,13 @@ function criptoCifraCesar(R, G, B) {
     const green = (G + chave) % 256;
     const blue = (B + chave) % 256;
 
-    const newRGB = {
+    const newRgb = {
         red,
         green,
         blue
     }
 
-    return newRGB;
+    return newRgb;
 }
 
 function decriptoCifraCesar(R, G, B){
@@ -146,13 +139,13 @@ function decriptoCifraCesar(R, G, B){
         blue += 256
     }
 
-    const newRGB = {
+    const newRgb = {
         red,
         green,
         blue
     }
 
-    return newRGB;
+    return newRgb;
 }
 
 function criptoCifraXor(R, G, B){
@@ -163,13 +156,13 @@ function criptoCifraXor(R, G, B){
     const green = (G ^ key);
     const blue = (B ^ key);
 
-    const newRGB = {
+    const newRgb = {
         red,
         green,
         blue
     }
 
-    return newRGB;
+    return newRgb;
 }
 
 function criptoCifraSdes(R, G, B) {
@@ -213,13 +206,63 @@ function criptoCifraSdes(R, G, B) {
     rgb.blue = blue;
   }
   
-  newRGB.red = parseInt(encryptSdes(rgb.red, keys), 2);
-  newRGB.green = parseInt(encryptSdes(rgb.green, keys), 2);
-  newRGB.blue = parseInt(encryptSdes(rgb.blue, keys), 2);
+  const newRgb = {
+    red: parseInt(encryptSdes(rgb.red, keys), 2),
+    green: parseInt(encryptSdes(rgb.green, keys), 2),
+    blue: parseInt(encryptSdes(rgb.blue, keys), 2)
+  }
+
+  return newRgb;
 }
 
 function decriptoCifraSdes(R, G, B) {
+  const chave = parseInt($("#input").val()).toString(2)
+  const keys = generateKeys(chave);
+
+  let rgb = {
+    red,
+    green,
+    blue
+  }
+
+  if (binaries[R]) {
+    rgb.red = binaries[R];
+  } else {
+    let red = R.toString(2);
+    while (red.length < 8) {
+      red = "0" + red;
+    }
+    binaries[R] = red;
+    rgb.red = red;
+  }
+  if (binaries[G]) {
+    rgb.green = binaries[G];
+  } else {
+    let green = G.toString(2);
+    while (green.length < 8) {
+      green = "0" + green;
+    }
+    binaries[G] = green;
+    rgb.green = green;
+  }
+  if (binaries[B]) {
+    rgb.blue = binaries[B];
+  } else {
+    let blue = B.toString(2);
+    while (blue.length < 8) {
+      blue = "0" + blue;
+    }
+    binaries[B] = blue;
+    rgb.blue = blue;
+  }
   
+  const newRgb = {
+    red: parseInt(decryptSdes(rgb.red, keys), 2),
+    green: parseInt(decryptSdes(rgb.green, keys), 2),
+    blue: parseInt(decryptSdes(rgb.blue, keys), 2)
+  }
+
+  return newRgb;
 }
 
 function p10(k) {
