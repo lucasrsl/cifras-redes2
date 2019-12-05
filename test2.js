@@ -1,5 +1,6 @@
 var criptXor = new Image
 var criptCezar = new Image
+var binaries = [];
 
 function drawFirstImage(imageObj) {
     let canvas = document.getElementById("original");
@@ -82,9 +83,9 @@ function descriptImage(id = "xor"){
     console.log(imageData)
     var data = imageData.data;
     for (var i = 0; i < data.length; i += 4) {
-        var red = data[i]; // red
-        var green = data[i + 1]; // green
-        var blue = data[i + 2]; // blue
+        var red = data[i]; 
+        var green = data[i + 1]; 
+        var blue = data[i + 2]; 
 
         let newRgb = ""
         switch (id) {
@@ -174,23 +175,42 @@ function criptoCifraXor(R, G, B){
 function criptoCifraSdes(R, G, B) {
   const chave = parseInt($("#input").val()).toString(2)
   const keys = generateKeys(chave);
-  let red = R.toString(2);
-  let green = G.toString(2);
-  let blue = B.toString(2);
-  
-  while (red.length < 8) {
-    red = "0" + red;
-  }
-  while (green.length < 8) {
-    green = "0" + green;
-  }
-  while (blue.length < 8) {
-    blue = "0" + blue;
-  }
-  const rgb = {
+
+  let rgb = {
     red,
     green,
     blue
+  }
+
+  if (binaries[R]) {
+    rgb.red = binaries[R];
+  } else {
+    let red = R.toString(2);
+    while (red.length < 8) {
+      red = "0" + red;
+    }
+    binaries[R] = red;
+    rgb.red = red;
+  }
+  if (binaries[G]) {
+    rgb.green = binaries[G];
+  } else {
+    let green = G.toString(2);
+    while (green.length < 8) {
+      green = "0" + green;
+    }
+    binaries[G] = green;
+    rgb.green = green;
+  }
+  if (binaries[B]) {
+    rgb.blue = binaries[B];
+  } else {
+    let blue = B.toString(2);
+    while (blue.length < 8) {
+      blue = "0" + blue;
+    }
+    binaries[B] = blue;
+    rgb.blue = blue;
   }
   
   newRGB.red = parseInt(encryptSdes(rgb.red, keys), 2);
