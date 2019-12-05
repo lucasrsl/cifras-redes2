@@ -21,7 +21,7 @@ function drawImage(imageObj){
       }
           
       // obj rgb, chave, (1 = Cifra de Cesar; 2 = Cifra XOR, Outro = S-DES)
-      const newRgb = cripto(rgb, "1010000010", 3);
+      const newRgb = cripto(rgb, "010000010", 3);
 
       // i+3 is alpha (the fourth element)
       data[i] = newRgb.red;
@@ -29,8 +29,15 @@ function drawImage(imageObj){
       data[i + 2] = newRgb.blue;
     }
     
-    // overwrite ori,ginal image
+    // overwrite original image
     context.putImageData(imageData, 0, 0);
+}
+
+const decripto = () => {
+  var canvas2 = document.getElementById("mal");
+  var context2 = canvas2.getContext("2d");
+  var imageData = context2.getImageData(0, 0, canvas.width, canvas.height);
+
 }
 
 const cripto = (rgb, chave, algo) => {
@@ -54,9 +61,28 @@ const cripto = (rgb, chave, algo) => {
     
   } else {
     const keys = generateKeys(chave);
-    newRGB.red = encrypt(rgb.red, keys)
-    newRGB.green = encrypt(rgb.green, keys)
-    newRGB.blue = encrypt(rgb.blue, keys)
+    let red = rgb.red.toString(2);
+    let green = rgb.green.toString(2);
+    let blue = rgb.blue.toString(2);
+    
+    while (red.length < 8) {
+      red = "0" + red;
+    }
+    while (green.length < 8) {
+      green = "0" + green;
+    }
+    while (blue.length < 8) {
+      blue = "0" + blue;
+    }
+    const rgb2 = {
+      red,
+      green,
+      blue
+    }
+    
+    newRGB.red = parseInt(encrypt(rgb2.red, keys), 2);
+    newRGB.green = parseInt(encrypt(rgb2.green, keys), 2);
+    newRGB.blue = parseInt(encrypt(rgb2.blue, keys), 2);
   }
 
   return newRGB;

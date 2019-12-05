@@ -1,15 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="./index.css">
     <title>Document</title>
 </head>
+
 <body>
-    <canvas id="mal" width="320" height="180"></canvas>
-    <canvas id="mau" width="320" height="180"></canvas>
+    <div class="wrapper-actions">
+        <div class="wrapper">
+            <div class="image">
+                <canvas id="xor" width="320" height="180"></canvas>
+            </div >
+            <div class="wrapper-actions">
+                <button class="btn" onclick="callXor(imageObjTest)">Xor</button>
+                <button class="btn" onclick="callDescriptXor()">Descripto Xor</button>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="image">
+                <canvas id="sdes" width="320" height="180"></canvas>
+            </div >
+            <div class="wrapper-actions">
+                <button class="btn" onclick="callSdes(imageObjTest)">Sdes</button>
+                <button class="btn" onclick="callDescriptXor()">Descripto Sdes</button>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="image">
+                <canvas id="cezar" width="320" height="180"></canvas>
+            </div>
+            <div class="wrapper-actions">
+                <button class="btn" onclick="callCezar(imageObjTest)">Cezar</button>
+                <button class="btn" onclick="callDescriptCezar()">Descripto Cezar</button>
+            </div>
+        </div>
+    </div>
+    <div>
+        <canvas id="xor" width="320" height="180"></canvas>
+    </div>
+    <canvas id="original" width="320" height="180"></canvas>
+    <button class="btn" onclick="drawFirstImage(imageObjTest)">normal</button>
+    <button class="btn" onclick="callXor(imageObjTest)">xor</button>
+    <button class="btn" onclick="callCezar(imageObjTest)">cezar</button>
+    <input id="upload" type='file'>
+    <input type="text" id="input"/>
 </body>
+
 </html>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-<script type="text/javascript"  src="./crypto.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <!-- <script type="text/javascript" src="./test.js"></script> -->
+<script type="text/javascript" src="./test2.js"></script>
