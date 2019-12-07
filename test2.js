@@ -95,7 +95,7 @@ function descriptImage(id = "xor") {
     var green = data[i + 1];
     var blue = data[i + 2];
 
-    let newRgb = ""
+    let newRgb = {};
     switch (id) {
       case "xor":
         newRgb = criptoCifraXor(red, green, blue);
@@ -104,7 +104,7 @@ function descriptImage(id = "xor") {
         newRgb = decriptoCifraCesar(red, green, blue);
         break;
       case "sdes":
-        newRgb = decriptoSdes(red, green, blue);
+        newRgb = decriptoCifraSdes(red, green, blue);
         break;
     }
 
@@ -112,7 +112,8 @@ function descriptImage(id = "xor") {
     data[i + 1] = newRgb.green;
     data[i + 2] = newRgb.blue;
   }
-
+  console.log(data);
+  
   context.putImageData(imageData, 0, 0);
 }
 
@@ -231,9 +232,9 @@ function decriptoCifraSdes(R, G, B) {
   const keys = generateKeys(chave);
 
   let rgb = {
-    red,
-    green,
-    blue
+    R,
+    G,
+    B
   }
 
   if (binaries[R]) {
