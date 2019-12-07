@@ -3,33 +3,44 @@ var criptCezar = new Image
 var binaries = [];
 
 function drawFirstImage(imageObj) {
-    let canvas = document.getElementById("original");
-    let context = canvas.getContext("2d");
+  let canvas = document.getElementById("original");
+  let context = canvas.getContext("2d");
 
-    let destX = 1;
-    let destY = 1;
-    context.drawImage(imageObj, destX, destY, 320, 180);
+  let destX = 1;
+  let destY = 1;
+  context.drawImage(imageObj, destX, destY, 320, 180);
 }
 
 function callXor(imageObjTest) {
-    criptoXor = imageObjTest;
-    drawImageWithCifra(imageObjTest, "xor")
+  criptoXor = imageObjTest;
+  drawImageWithCifra(imageObjTest, "xor")
 }
 
-function callDescriptXor(){
-    descriptImage("xor")
+function callDescriptXor() {
+  const chave = $("#input").val()
+  if (chave)
+    return descriptImage("xor")
+  alert('preencha a chave')
 }
 
 function callCezar(imageObjTest) {
-    drawImageWithCifra(imageObjTest, "cezar")
+  const chave = $("#input").val()
+  if (chave)
+    return drawImageWithCifra(imageObjTest, "cezar")
+
+  alert("prrencha a chave")
 }
 
-function callDescriptCezar(){
-    descriptImage("cezar")
+function callDescriptCezar() {
+  descriptImage("cezar")
 }
 
-function callSdes(){
+function callSdes() {
+  const chave = $("#input").val()
+  if (chave)
+    return drawImageWithCifra(imageObjTest, "sdes")
 
+  alert("prrencha a chave")
 }
 
 function callDecriptSdes() {
@@ -37,132 +48,132 @@ function callDecriptSdes() {
 }
 
 function drawImageWithCifra(imageObj, id) {
-    var canvas = document.getElementById(id);
-    var context = canvas.getContext("2d");
+  var canvas = document.getElementById(id);
+  var context = canvas.getContext("2d");
+  // debugger;
+  var destX = 1;
+  var destY = 1;
 
-    var destX = 1;
-    var destY = 1;
+  context.drawImage(imageObj, destX, destY, 320, 180);
 
-    context.drawImage(imageObj, destX, destY, 320, 180);
+  var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
 
-    var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-    
-    var data = imageData.data;
-    for (var i = 0; i < data.length; i += 4) {
-        var red = data[i]; // red
-        var green = data[i + 1]; // green
-        var blue = data[i + 2]; // blue
+  var data = imageData.data;
+  for (var i = 0; i < data.length; i += 4) {
+    var red = data[i]; // red
+    var green = data[i + 1]; // green
+    var blue = data[i + 2]; // blue
 
-        let newRgb = ""
-        switch (id) {
-            case "xor":
-              newRgb = criptoCifraXor(red, green, blue);
-              break;
-            case "cezar":
-              newRgb = criptoCifraCesar(red, green, blue);
-              break;
-            case "sdes":
-              newRgb = criptoCifraSdes(red, green, blue);
-              break;
-        }
-
-        data[i] = newRgb.red;
-        data[i + 1] = newRgb.green;
-        data[i + 2] = newRgb.blue;
+    let newRgb = ""
+    switch (id) {
+      case "xor":
+        newRgb = criptoCifraXor(red, green, blue);
+        break;
+      case "cezar":
+        newRgb = criptoCifraCesar(red, green, blue);
+        break;
+      case "sdes":
+        newRgb = criptoCifraSdes(red, green, blue);
+        break;
     }
 
-    context.putImageData(imageData, 0, 0);
+    data[i] = newRgb.red;
+    data[i + 1] = newRgb.green;
+    data[i + 2] = newRgb.blue;
+  }
+
+  context.putImageData(imageData, 0, 0);
 }
 
-function descriptImage(id = "xor"){
-    var canvas = document.getElementById(id);
-    var context = canvas.getContext("2d");
-    var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-    var data = imageData.data;
-    for (var i = 0; i < data.length; i += 4) {
-        var red = data[i]; 
-        var green = data[i + 1]; 
-        var blue = data[i + 2]; 
+function descriptImage(id = "xor") {
+  var canvas = document.getElementById(id);
+  var context = canvas.getContext("2d");
+  var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+  var data = imageData.data;
+  for (var i = 0; i < data.length; i += 4) {
+    var red = data[i];
+    var green = data[i + 1];
+    var blue = data[i + 2];
 
-        let newRgb = ""
-        switch (id) {
-            case "xor":
-              newRgb = criptoCifraXor(red, green, blue);
-              break;
-            case "cezar":
-              newRgb = decriptoCifraCesar(red, green, blue);
-              break;
-            case "sdes":
-              newRgb = decriptoSdes(red, green, blue);
-              break;
-        }
-
-        data[i] = newRgb.red;
-        data[i + 1] = newRgb.green;
-        data[i + 2] = newRgb.blue;
+    let newRgb = ""
+    switch (id) {
+      case "xor":
+        newRgb = criptoCifraXor(red, green, blue);
+        break;
+      case "cezar":
+        newRgb = decriptoCifraCesar(red, green, blue);
+        break;
+      case "sdes":
+        newRgb = decriptoSdes(red, green, blue);
+        break;
     }
 
-    context.putImageData(imageData, 0, 0);
+    data[i] = newRgb.red;
+    data[i + 1] = newRgb.green;
+    data[i + 2] = newRgb.blue;
+  }
+
+  context.putImageData(imageData, 0, 0);
 }
 
 function criptoCifraCesar(R, G, B) {
-    const chave = parseInt($("#input").val())
+  const chave = parseInt($("#input").val())
 
-    const red = (R + chave) % 256;
-    const green = (G + chave) % 256;
-    const blue = (B + chave) % 256;
+  const red = (R + chave) % 256;
+  const green = (G + chave) % 256;
+  const blue = (B + chave) % 256;
 
-    const newRgb = {
-        red,
-        green,
-        blue
-    }
+  const newRgb = {
+    red,
+    green,
+    blue
+  }
 
-    return newRgb;
+  return newRgb;
 }
 
-function decriptoCifraCesar(R, G, B){
-    const chave = parseInt($("#input").val())
-    let red = R - chave
-    let green = G - chave
-    let blue = B - chave
+function decriptoCifraCesar(R, G, B) {
+  const chave = parseInt($("#input").val())
+  let red = R - chave
+  let green = G - chave
+  let blue = B - chave
 
-    if (red < 0) {
-        red += 256
-    }
+  if (red < 0) {
+    red += 256
+  }
 
-    if (green < 0) {
-        green += 256
-    }
+  if (green < 0) {
+    green += 256
+  }
 
-    if (blue < 0) {
-        blue += 256
-    }
+  if (blue < 0) {
+    blue += 256
+  }
 
-    const newRgb = {
-        red,
-        green,
-        blue
-    }
+  const newRgb = {
+    red,
+    green,
+    blue
+  }
 
-    return newRgb;
+  return newRgb;
 }
 
-function criptoCifraXor(R, G, B){
-    const chave = parseInt($("#input").val()).toString(2)
-    const key = parseInt(chave, 2)
+function criptoCifraXor(R, G, B) {
+  const chave = parseInt($("#input").val()).toString(2)
+  const key = parseInt(chave, 2)
 
-    const red = (R ^ key);
-    const green = (G ^ key);
-    const blue = (B ^ key);
+  const red = (R ^ key);
+  const green = (G ^ key);
+  const blue = (B ^ key);
 
-    const newRgb = {
-        red,
-        green,
-        blue
-    }
+  const newRgb = {
+    red,
+    green,
+    blue
+  }
 
-    return newRgb;
+  return newRgb;
 }
 
 function criptoCifraSdes(R, G, B) {
@@ -170,9 +181,9 @@ function criptoCifraSdes(R, G, B) {
   const keys = generateKeys(chave);
 
   let rgb = {
-    red,
-    green,
-    blue
+    red: "",
+    green: "",
+    blue: ""
   }
 
   if (binaries[R]) {
@@ -205,7 +216,7 @@ function criptoCifraSdes(R, G, B) {
     binaries[B] = blue;
     rgb.blue = blue;
   }
-  
+
   const newRgb = {
     red: parseInt(encryptSdes(rgb.red, keys), 2),
     green: parseInt(encryptSdes(rgb.green, keys), 2),
@@ -255,7 +266,7 @@ function decriptoCifraSdes(R, G, B) {
     binaries[B] = blue;
     rgb.blue = blue;
   }
-  
+
   const newRgb = {
     red: parseInt(decryptSdes(rgb.red, keys), 2),
     green: parseInt(decryptSdes(rgb.green, keys), 2),
@@ -271,7 +282,7 @@ function p10(k) {
   var r = [];
 
   pA.forEach(element => {
-      r.push(kA[element-1])
+    r.push(kA[element - 1])
   });
   return r;
 }
@@ -282,45 +293,45 @@ function p8(k) {
   var r = [];
 
   pA.forEach(element => {
-      r.push(kA[element-1])
+    r.push(kA[element - 1])
   });
   return r;
 }
 
-function p4(k){
+function p4(k) {
   var pA = [2, 4, 3, 1];
   var kA = k.split('');
   var r = [];
 
   pA.forEach(element => {
-      r.push(kA[element-1])
+    r.push(kA[element - 1])
   });
   return r;
-} 
+}
 
-function lShift (a) {
-  
+function lShift(a) {
+
   var shifted = [];
   var last;
-  a.forEach( (element, key) => {
-      if (key === 0) {
-          last = element;
-      } else {
-          shifted.push(element);
-      }
+  a.forEach((element, key) => {
+    if (key === 0) {
+      last = element;
+    } else {
+      shifted.push(element);
+    }
   })
   shifted.push(last);
   return shifted;
 }
 
-function lShiftN (a, m) {
-  for(let i = 0; i < m; i++){
-      a = lShift(a);
-  } 
+function lShiftN(a, m) {
+  for (let i = 0; i < m; i++) {
+    a = lShift(a);
+  }
   return a;
 }
 
-function generateKeys (key) {
+function generateKeys(key) {
 
   key = p10(key)
   var kA1 = key.slice(0, 5);
@@ -345,58 +356,58 @@ function p8Init(k) {
   var r = [];
 
   pA.forEach(element => {
-      r.push(kA[element-1])
+    r.push(kA[element - 1])
   });
   return r;
 }
 
-function p8Inverse (k) {
+function p8Inverse(k) {
   var pA = [4, 1, 3, 5, 7, 2, 8, 6];
   var kA = k.split('');
   var r = [];
 
   pA.forEach(element => {
-      r.push(kA[element-1])
+    r.push(kA[element - 1])
   });
   return r;
 }
 
 // Permutate and expand 4 bits to 8 bits
-function p4E(k){
-  
+function p4E(k) {
+
   var pA = [4, 1, 2, 3, 2, 3, 4, 1];
 
   var kA = k.split('');
   var r = [];
 
   pA.forEach(element => {
-      r.push(kA[element-1])
+    r.push(kA[element - 1])
   });
   return r;
-} 
+}
 
-function p4(k){
+function p4(k) {
   var pA = [2, 4, 3, 1];
   var kA = k.split('');
   var r = [];
 
   pA.forEach(element => {
-      r.push(kA[element-1])
+    r.push(kA[element - 1])
   });
   return r;
-} 
+}
 
-function XOR (a, b) {
+function XOR(a, b) {
   a = a.split('');
   b = b.split('');
 
   var r = [];
-  a.forEach( (element, key) => {
-      if (element !== b[key]) {
-          r.push(1);
-      } else {
-          r.push(0);
-      }
+  a.forEach((element, key) => {
+    if (element !== b[key]) {
+      r.push(1);
+    } else {
+      r.push(0);
+    }
   });
 
   return r.join('');
@@ -419,7 +430,7 @@ var MATRIX_S1 = [
 // 4 bit input
 // 1 and 4 of input is the row
 // 2 and 3 of input is the column
-function SUB1 (r, c) {
+function SUB1(r, c) {
 
   r = parseInt(r, 2);
   c = parseInt(c, 2);
@@ -427,7 +438,7 @@ function SUB1 (r, c) {
   return MATRIX_S0[r][c];
 }
 
-function SUB0 (r, c) {
+function SUB0(r, c) {
 
   r = parseInt(r, 2);
   c = parseInt(c, 2);
@@ -435,7 +446,7 @@ function SUB0 (r, c) {
   return MATRIX_S1[r][c];
 }
 
-function fk (P1, P2, key) {
+function fk(P1, P2, key) {
 
   // Expand P2's 4 bits into 8
   var P2E = p4E(P2.join('')).join('')
@@ -460,11 +471,11 @@ function fk (P1, P2, key) {
 
   // XOR P4 and P1
   return XOR(P4.join(''), P1.join(''));
-  
+
 }
 
 
-function encryptSdes (p, keys) {
+function encryptSdes(p, keys) {
 
   // Initial permutation
   // Split initial permutation into two halfs
@@ -488,7 +499,7 @@ function encryptSdes (p, keys) {
 
   // Run fk with key 1
   var fk2 = fk(SW1, SW2, keys[1]);
-  
+
   // Join
   var RES = fk2 + SW2.join('');
   var p8I = p8Inverse(RES);
@@ -498,7 +509,7 @@ function encryptSdes (p, keys) {
 
 // Decrypt is the same as encrypt , except that we start 
 // Using key[1] as the first key and the key[0]
-function decryptSdes (p, keys) {
+function decryptSdes(p, keys) {
 
   // Initial permutation
   // Split initial permutation into two halfs
@@ -522,7 +533,7 @@ function decryptSdes (p, keys) {
 
   // Run fk with key 0
   var fk2 = fk(SW1, SW2, keys[0]);
-  
+
   // Join
   var RES = fk2 + SW2.join('');
   var p8I = p8Inverse(RES);
@@ -535,21 +546,21 @@ var imageObjTest = new Image
 
 function readFile() {
 
-    if (this.files && this.files[0]) {
+  if (this.files && this.files[0]) {
 
-        var FR = new FileReader();
+    var FR = new FileReader();
 
-        FR.addEventListener("load", function (e) {
-            imageObjTest.src = e.target.result
-        });
+    FR.addEventListener("load", function (e) {
+      imageObjTest.src = e.target.result
+    });
 
-        FR.readAsDataURL(this.files[0]);
-    }
+    FR.readAsDataURL(this.files[0]);
+  }
 }
 
 document.getElementById("upload").addEventListener("change", readFile);
 
 var imageObj = new Image();
 imageObj.onload = function () {
-    // drawImageWithCifra(this, "mal");
+  // drawImageWithCifra(this, "mal");
 };

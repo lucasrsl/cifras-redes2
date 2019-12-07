@@ -1,0 +1,21 @@
+.wrapper{
+  display: flex;
+  flex-direction: column;
+}
+
+.wrapper-actions{
+  display: flex;
+  justify-content: space-between; 
+}
+
+.btn{
+  width: 70px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid #333;
+  cursor: pointer;
+}
+
+.image{
+  background: black;
+}
