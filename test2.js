@@ -16,8 +16,11 @@ function drawFirstImage(imageObj) {
 
 function callXor(imageObjTest) {
   if(!encryptedXor) {
-    criptoXor = imageObjTest;
-    drawImageWithCifra(imageObjTest, "xor")
+    const chave = $("#input").val()
+    if (chave)
+      return drawImageWithCifra(imageObjTest, "xor")
+  
+    alert("preencha a chave")
   }
 }
 
