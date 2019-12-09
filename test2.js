@@ -1,6 +1,9 @@
 var criptXor = new Image
 var criptCezar = new Image
 var binaries = [];
+var encryptedCesar = false;
+var encryptedXor = false;
+var encryptedSdes = false;
 
 function drawFirstImage(imageObj) {
   let canvas = document.getElementById("original");
@@ -12,39 +15,51 @@ function drawFirstImage(imageObj) {
 }
 
 function callXor(imageObjTest) {
-  criptoXor = imageObjTest;
-  drawImageWithCifra(imageObjTest, "xor")
+  if(!encryptedXor) {
+    criptoXor = imageObjTest;
+    drawImageWithCifra(imageObjTest, "xor")
+  }
 }
 
 function callDescriptXor() {
-  const chave = $("#input").val()
-  if (chave)
-    return descriptImage("xor")
-  alert('preencha a chave')
+  if(encryptedXor) {
+    const chave = $("#input").val()
+    if (chave)
+      return descriptImage("xor")
+    alert('preencha a chave')
+  }
 }
 
 function callCezar(imageObjTest) {
-  const chave = $("#input").val()
-  if (chave)
-    return drawImageWithCifra(imageObjTest, "cezar")
-
-  alert("prrencha a chave")
+  if(!encryptedCesar) {
+    const chave = $("#input").val()
+    if (chave)
+      return drawImageWithCifra(imageObjTest, "cezar")
+  
+    alert("preencha a chave")
+  }
 }
 
 function callDescriptCezar() {
-  descriptImage("cezar")
+  if(encryptedCesar) {
+    descriptImage("cezar")
+  }
 }
 
 function callSdes() {
-  const chave = $("#input").val()
-  if (chave)
-    return drawImageWithCifra(imageObjTest, "sdes")
-
-  alert("prrencha a chave")
+  if(!encryptedSdes) {
+    const chave = $("#input").val()
+    if (chave)
+      return drawImageWithCifra(imageObjTest, "sdes")
+  
+    alert("preencha a chave")
+  }
 }
 
 function callDecriptSdes() {
-  descriptImage("sdes")
+  if(encryptedSdes) {
+    descriptImage("sdes")
+  }
 }
 
 function drawImageWithCifra(imageObj, id) {
@@ -81,6 +96,17 @@ function drawImageWithCifra(imageObj, id) {
     data[i + 1] = newRgb.green;
     data[i + 2] = newRgb.blue;
   }
+  switch (id) {
+    case "xor":
+      encryptedXor = true;
+      break;
+    case "cezar":
+      encryptedCesar = true;
+      break;
+    case "sdes":
+      encryptedSdes = true;
+      break;
+  }
 
   context.putImageData(imageData, 0, 0);
 }
@@ -112,6 +138,18 @@ function descriptImage(id = "xor") {
     data[i + 1] = newRgb.green;
     data[i + 2] = newRgb.blue;
   }
+  switch (id) {
+    case "xor":
+      encryptedXor = false;
+      break;
+    case "cezar":
+      encryptedCesar = false;
+      break;
+    case "sdes":
+      encryptedSdes = false;
+      break;
+  }
+
   console.log(data);
   
   context.putImageData(imageData, 0, 0);
@@ -373,7 +411,6 @@ function p8Inverse(k) {
   return r;
 }
 
-// Permutate and expand 4 bits to 8 bits
 function p4E(k) {
 
   var pA = [4, 1, 2, 3, 2, 3, 4, 1];
@@ -428,9 +465,6 @@ var MATRIX_S1 = [
   ['10', '01', '00', '11']
 ]
 
-// 4 bit input
-// 1 and 4 of input is the row
-// 2 and 3 of input is the column
 function SUB1(r, c) {
 
   r = parseInt(r, 2);
@@ -449,28 +483,21 @@ function SUB0(r, c) {
 
 function fk(P1, P2, key) {
 
-  // Expand P2's 4 bits into 8
   var P2E = p4E(P2.join('')).join('')
 
-  // XOR P2E with key1
   var XOR2 = XOR(P2E, key);
 
-  // Split the 8 bits
   var S0 = XOR2.slice(0, 4);
   var S1 = XOR2.slice(4, 8);
 
-  // Row is 1, 4 bits
-  // Col is 2, 3 bits
   var R0 = S0[0] + S0[3];
   var C0 = S0[1] + S0[2];
 
   var R1 = S1[0] + S1[3];
   var C1 = S1[1] + S1[2];
 
-  // Look up in the matrix
   var P4 = p4(SUB1(R0, C0) + SUB0(R1, C1));
 
-  // XOR P4 and P1
   return XOR(P4.join(''), P1.join(''));
 
 }
@@ -478,64 +505,46 @@ function fk(P1, P2, key) {
 
 function encryptSdes(p, keys) {
 
-  // Initial permutation
-  // Split initial permutation into two halfs
-  // P1 is the left bits and P2 is the right bits
   var IP = p8Init(p);
 
   var P1 = IP.slice(0, 4);
   var P2 = IP.slice(4, 8);
 
-  // Run fk with key 0
   var fk1 = fk(P1, P2, keys[0]);
 
-  // Swap
   var SW = P2.join('') + fk1;
 
   SW = SW.split('');
 
-  // Put SW into the funtion fk again
   SW1 = SW.slice(0, 4);
   SW2 = SW.slice(4, 8);
 
-  // Run fk with key 1
   var fk2 = fk(SW1, SW2, keys[1]);
 
-  // Join
   var RES = fk2 + SW2.join('');
   var p8I = p8Inverse(RES);
 
   return p8I.join('');
 }
 
-// Decrypt is the same as encrypt , except that we start 
-// Using key[1] as the first key and the key[0]
 function decryptSdes(p, keys) {
 
-  // Initial permutation
-  // Split initial permutation into two halfs
-  // P1 is the left bits and P2 is the right bits
   var IP = p8Init(p);
 
   var P1 = IP.slice(0, 4);
   var P2 = IP.slice(4, 8);
 
-  // Run fk with key 1
   var fk1 = fk(P1, P2, keys[1]);
 
-  // Swap
   var SW = P2.join('') + fk1;
 
   SW = SW.split('');
 
-  // Put SW into the funtion fk again
   SW1 = SW.slice(0, 4);
   SW2 = SW.slice(4, 8);
 
-  // Run fk with key 0
   var fk2 = fk(SW1, SW2, keys[0]);
 
-  // Join
   var RES = fk2 + SW2.join('');
   var p8I = p8Inverse(RES);
 
@@ -562,6 +571,4 @@ function readFile() {
 document.getElementById("upload").addEventListener("change", readFile);
 
 var imageObj = new Image();
-imageObj.onload = function () {
-  // drawImageWithCifra(this, "mal");
-};
+imageObj.onload = function () {};
