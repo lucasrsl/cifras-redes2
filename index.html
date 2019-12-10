@@ -39,16 +39,24 @@
             </div>
         </div>
     </div>
-    <div>
+    <div style="display: flex;">
         <canvas id="xor" width="320" height="180"></canvas>
+    </div>
+    <div style="display: flex; ">
+        <div style="display: flex; flex-direction: column; margin-right: 30px;"> 
+            <input id="upload" type='file'>
+        </div>
+    <div style="display: flex; flex-direction: column;"> 
+        <label for="input"> Digite a Chave </label>
+        <input type="text" style="width: 170px; margin-top: 10px; color: black; border-radius: 8px; font-size: 15px; height: 30px; border: 1px solid black; padding: 5px;" id="input"/>
+    </div>
     </div>
     <canvas id="original" width="320" height="180"></canvas>
     <button class="btn" onclick="drawFirstImage(imageObjTest)">normal</button>
     <button class="btn" onclick="callXor(imageObjTest)">Xor</button>
     <button class="btn" onclick="callSdes(imageObjTest)">S-Des</button>
     <button class="btn" onclick="callCezar(imageObjTest)">Cezar</button>
-    <input id="upload" type='file'>
-    <input type="text" id="input"/>
+    <!-- <input id="upload" type='file'> -->
 </body>
 
 </html>
